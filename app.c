@@ -16,21 +16,21 @@ string new(string line, int n) {
 }
 
 string concatenation(string first, string second) {
-    string result;
-    result = new(result, first.len+second.len);
-    strcpy(result.data, first.data);
-    strcat(result.data, second.data);
+    string result = new(result, first.len+second.len);
+    memcpy(result.data, first.data, first.len);
+    memcpy(result.data+first.len, second.data, second.len+1);
     return result;
 }
 
 string substring(string original, int i, int j) {
     if (i >= 0 && i <= j && j < original.len) {
-        string result;
-        result = new(result, j-i+1);
-        strncpy(result.data, original.data+i, j-i+1);
+        int interval = j-i+1;
+        string result = new(result, interval);
+        memcpy(result.data, original.data+i, interval);
+        result.data[interval] = '\0';
         return result;
     }
-    printf("Incorrect input data!\n");
+    printf("Interval is out of range!\n");
     exit(-1);
 }
 
@@ -40,6 +40,7 @@ string upper(string original) {
     for (int i = 0; i < original.len; i++) {
         result.data[i] = toupper(original.data[i]);
     }
+    result.data[original.len] = '\0';
     return result;
 }
 
@@ -49,5 +50,12 @@ string lower(string original) {
     for (int i = 0; i < original.len; i++) {
         result.data[i] = tolower(original.data[i]);
     }
+    result.data[original.len] = '\0';
     return result;
+}
+
+void clear(string *line) {
+    free(line->data);
+    line->data = NULL;
+    line->len = 0;
 }
