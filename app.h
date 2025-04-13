@@ -5,7 +5,7 @@ typedef struct {
     char* data;
     int len;
 } string;
-string new(string line, int n);
+string new(char* line);
 string concatenation(string first, string second);
 string substring(string original, int i, int j);
 string upper(string original);

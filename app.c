@@ -5,57 +5,67 @@
 #include "app.h"
 
 
-string new(string line, int n) {
-    if (n > 0){
-        line.data = (char*)malloc((n+1)*sizeof(char));
-        line.len = n;
-        return line;
+string new(char* line) {
+    string str;
+    if (line) {
+        str.len = strlen(line);
+        str.data = (char*)malloc((str.len+1)*sizeof(char));
+        memcpy(str.data, line, str.len+1);
+    } else {
+        str.len = 0;
+        str.data = (char*)malloc(sizeof(char));
+        str.data = "\0";
     }
-    printf("Incorrect input data!\n");
-    exit(-1);
+    return str;
 }
 
 string concatenation(string first, string second) {
-    string result = new(result, first.len+second.len);
-    memcpy(result.data, first.data, first.len);
-    memcpy(result.data+first.len, second.data, second.len+1);
+    int len = first.len+second.len;
+    char* data = (char*)malloc((len+1)*sizeof(char));
+    memcpy(data, first.data, first.len);
+    memcpy(data+first.len, second.data, second.len+1);
+    string result = new(data);
     return result;
 }
 
 string substring(string original, int i, int j) {
     if (i >= 0 && i <= j && j < original.len) {
-        int interval = j-i+1;
-        string result = new(result, interval);
-        memcpy(result.data, original.data+i, interval);
-        result.data[interval] = '\0';
+        int len = j-i+1;
+        char* data = (char*)malloc((len+1)*sizeof(char));
+        memcpy(data, original.data+i, len);
+        data[len] = '\0';
+        string result = new(data);
         return result;
     }
-    printf("Interval is out of range!\n");
-    exit(-1);
+    return new(NULL);
 }
 
 string upper(string original) {
-    string result;
-    result = new(result, original.len);
-    for (int i = 0; i < original.len; i++) {
-        result.data[i] = toupper(original.data[i]);
+    int len = original.len;
+    char* data = (char*)malloc((len+1)*sizeof(char));
+    for (int i = 0; i < len; i++) {
+        data[i] = toupper(original.data[i]);
     }
-    result.data[original.len] = '\0';
+    data[len] = '\0';
+    string result = new(data);
     return result;
 }
 
 string lower(string original) {
-    string result;
-    result = new(result, original.len);
-    for (int i = 0; i < original.len; i++) {
-        result.data[i] = tolower(original.data[i]);
+    int len = original.len;
+    char* data = (char*)malloc((len+1)*sizeof(char));
+    for (int i = 0; i < len; i++) {
+        data[i] = tolower(original.data[i]);
     }
-    result.data[original.len] = '\0';
+    data[len] = '\0';
+    string result = new(data);
     return result;
 }
 
-void clear(string *line) {
-    free(line->data);
-    line->data = NULL;
-    line->len = 0;
+void clear(string* line) {
+    if (line->len) {
+        free(line->data);
+        line->data = NULL;
+        line->len = 0;
+    }
 }
